@@ -75,3 +75,18 @@ git push -u origin main
 ```
 
 ✅ **Milestone Reached:** The application is now version-controlled and connected to GitHub, ready for continuous integration and deployment integration with AWS Amplify.
+
+### Step 4: Automated Testing Setup
+To ensuring code quality, we integrated a testing framework using **Vitest** and **React Testing Library**.
+
+**Configuration:**
+*   Installed dependencies: `vitest`, `jsdom`, `@testing-library/react`, `@testing-library/jest-dom`.
+*   Configured `vite.config.js` to use `jsdom` environment.
+*   Added `"test": "vitest"` script to `package.json`.
+
+**Running Tests:**
+To run the test suite locally:
+```powershell
+npm test
+```
+This verifies that the React application renders correctly, preventing regressions.
