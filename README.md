@@ -27,7 +27,18 @@ graph LR
 This module focuses on setting up the local development environment, creating the React application, and establishing version control with GitHub.
 
 ### Step 1: Manual Amplify Setup
-We started by manually setting up the AWS Amplify environment to host our application.
+We started by manually setting up the AWS Amplify environment to host our application through the AWS Management Console.
+
+**Steps:**
+1.  **Open Amplify:** Log in to the AWS Console and search for "Amplify", then select it.
+2.  **New App:** Click on **"Create new app"** (or "New app") and select **"Host web app"**.
+3.  **Select Repo:** Choose **GitHub** as the source code provider and click **Continue**.
+    *   *Note: You may need to authorize AWS Amplify to access your GitHub account.*
+4.  **Click Main:** Select your repository (`iamMichaelSmith/AWS-Web-App`) and ensure the branch is set to `main`.
+5.  **Keep Defaults:** Leave all build settings as their default values and click **Next**.
+6.  **Deploy:** Review the summary and click **Save and deploy**.
+
+This initiates the build process, pulling the code from GitHub and deploying it to a live URL.
 
 ### Step 2: Create the React Application
 We utilized Vite to generate a lightweight and fast React application.
