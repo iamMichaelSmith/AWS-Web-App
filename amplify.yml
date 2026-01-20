@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd profilesapp
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: profilesapp/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - profilesapp/node_modules/**/*
