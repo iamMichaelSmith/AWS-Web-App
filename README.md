@@ -88,3 +88,70 @@ To run the test suite locally:
 npm test
 ```
 This verifies that the React application renders correctly, preventing regressions.
+
+---
+
+## Module 2: Serverless Lambda Function
+
+This module implements a serverless Lambda function that triggers after a user confirms their account sign-up. The function is built using AWS Amplify's backend framework.
+
+### Step 1: Create Lambda Function Files
+
+Navigate to the `amplify/auth` directory and create the Lambda function structure:
+
+**1. Create the folder structure:**
+```powershell
+cd amplify/auth
+mkdir post-confirmation
+cd post-confirmation
+```
+
+**2. Create the handler file:**
+Create `handler.ts` with the following code:
+```typescript
+import type { PostConfirmationTriggerHandler } from "aws-lambda";
+
+export const handler: PostConfirmationTriggerHandler = async (event) => {
+  return event;
+};
+```
+
+**Purpose:** This handler executes when a user confirms their account. Currently, it returns the event unchanged - it will be enhanced in later modules to interact with DynamoDB.
+
+**3. Create the resource file:**
+Create `resource.ts` with the following code:
+```typescript
+import { defineFunction } from '@aws-amplify/backend';
+
+export const postConfirmation = defineFunction({
+  name: 'post-confirmation',
+});
+```
+
+**Purpose:** Defines the Lambda function resource using Amplify's `defineFunction`, naming it to match the folder structure.
+
+### Step 2: Verify TypeScript Compilation
+
+Ensure all TypeScript files compile correctly:
+```powershell
+cd amplify
+npx tsc --noEmit
+```
+
+✅ **Success:** Exit code 0 confirms all imports and type definitions are valid.
+
+### File Structure
+After completing this module, your project structure should include:
+```
+amplify/
+├── auth/
+│   ├── post-confirmation/
+│   │   ├── handler.ts      # Lambda function handler
+│   │   └── resource.ts     # Lambda function definition
+│   └── resource.ts
+├── backend.ts
+└── data/
+```
+
+✅ **Milestone Reached:** You have successfully defined a Lambda function using AWS Amplify. The function is ready to be wired up to the authentication flow in the next steps.
+
