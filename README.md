@@ -153,5 +153,88 @@ amplify/
 └── data/
 ```
 
-✅ **Milestone Reached:** You have successfully defined a Lambda function using AWS Amplify. The function is ready to be wired up to the authentication flow in the next steps.
+---
+
+## Module 3: GraphQL Client Generation
+
+In this module, we generate the GraphQL client code required for the Lambda function and the frontend to interact with the AppSync API.
+
+### Step 1: Generate GraphQL Code
+Run the following command from the project root to generate the TypeScript types and GraphQL statements:
+
+```powershell
+npx ampx generate graphql-client-code --out amplify/auth/post-confirmation/graphql
+```
+
+**Output Files:**
+- `amplify/auth/post-confirmation/graphql/API.ts`: TypeScript types for the API.
+- `amplify/auth/post-confirmation/graphql/mutations.ts`: CREATE/UPDATE/DELETE operations.
+- `amplify/auth/post-confirmation/graphql/queries.ts`: READ operations.
+
+✅ **Success:** The GraphQL client is now available for use within the `post-confirmation` Lambda function.
+
+---
+
+## Module 4: IAM & Post-confirmation Trigger
+
+This module configures the Lambda function to interact with the GraphQL API using IAM authorization and wires up the trigger in the Auth resource.
+
+### Step 1: Update Handler with GraphQL Client
+The `handler.ts` was updated to use the generated client to create a user profile in DynamoDB via GraphQL.
+
+### Step 2: Configure Auth Triggers
+The `amplify/auth/resource.ts` was updated to include the `postConfirmation` trigger:
+
+```typescript
+export const auth = defineAuth({
+  // ... existing config
+  triggers: {
+    postConfirmation
+  }
+});
+```
+
+✅ **Milestone Reached:** The authentication flow now automatically creates a profile record in the database upon successful registration.
+
+---
+
+## Module 5: Frontend Integration & Authenticator
+
+The final module integrates the AWS Amplify Authenticator and builds the user profile display.
+
+### Step 1: Install Frontend Dependencies
+Navigate to the `profilesapp` directory and install the necessary libraries:
+
+```powershell
+cd profilesapp
+npm install aws-amplify @aws-amplify/ui-react
+```
+
+### Step 2: Configure the Authenticator
+Wrap the application in `main.jsx` with the `Authenticator` component to provide a pre-built sign-up/sign-in flow.
+
+### Step 3: Implement Profile List
+Update `App.jsx` to fetch and display the user profiles using the generated GraphQL client.
+
+### Step 4: Run the Application
+Start the frontend development server:
+
+```powershell
+cd profilesapp
+npm run dev
+```
+
+**Access the App:** [http://localhost:5173/](http://localhost:5173/)
+
+✅ **Project Complete:** You now have a full-stack serverless web application with authentication, database integration, and a responsive frontend!
+
+---
+
+## Maintenance & Common Commands
+
+| Command | Description |
+| :--- | :--- |
+| `npx ampx sandbox` | Syncs backend changes in real-time. |
+| `npm run dev` | Starts the frontend (Run inside `profilesapp`). |
+| `npx ampx generate graphql-client-code` | Regenerates GraphQL types after schema changes. |
 
