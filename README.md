@@ -6,21 +6,8 @@ This project demonstrates how to build a serverless web application using AWS se
 
 The application uses the following AWS services and flow:
 
-```mermaid
-graph LR
-    Users((Users)) --> Amplify[AWS Amplify]
-    Amplify <--> Cognito[Amazon Cognito]
-    Amplify --> Lambda[AWS Lambda]
-    Lambda --> AppSync[AWS AppSync]
-    AppSync --> GraphQL(GraphQL)
-    GraphQL --> DynamoDB[(DynamoDB)]
-    
-    style Amplify fill:#FF9900,stroke:#232F3E,color:white
-    style Cognito fill:#DD344C,stroke:#232F3E,color:white
-    style Lambda fill:#FF9900,stroke:#232F3E,color:white
-    style AppSync fill:#FF4F8B,stroke:#232F3E,color:white
-    style DynamoDB fill:#4053D6,stroke:#232F3E,color:white
-```
+<img width="2158" height="922" alt="AWS Web App Project Image" src="https://github.com/user-attachments/assets/ab3a5c6a-fcad-427f-a8f8-9c320951518f" />
+
 
 ## Module 1: Static Web Hosting & Environment Setup
 
