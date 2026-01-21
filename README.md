@@ -2,6 +2,14 @@
 
 This is a professional **Studio Client Survey** web application built on AWS Amplify Gen 2. It allows recording studios to collect valuable client feedback through a premium, dark-themed interface.
 
+## Current Status (January 21, 2026)
+
+- Public survey is live at `/survey` and accepts guest submissions.
+- Staff-only admin dashboard is live at `/admin` and lists `SurveySubmission` items.
+- Amplify Gen 2 data models are deployed; `SurveySubmission` and `UserProfile` are backed by DynamoDB.
+- Staff access is enforced via Cognito group `Staff` (read/update/delete).
+- Data can be verified from the terminal with `aws dynamodb scan --table-name <SurveySubmission-table>`.
+
 ## Key Features
 
 - **Public Survey Access**: Clients can submit feedback via `/survey` without logging in (powered by AWS Identity Pool guest access).
@@ -111,7 +119,7 @@ git branch -M main
 git push -u origin main
 ```
 
-✅ **Milestone Reached:** The application is now version-controlled and connected to GitHub, ready for continuous integration and deployment integration with AWS Amplify.
+OK **Milestone Reached:** The application is now version-controlled and connected to GitHub, ready for continuous integration and deployment integration with AWS Amplify.
 
 ### Step 4: Automated Testing Setup
 To ensuring code quality, we integrated a testing framework using **Vitest** and **React Testing Library**.
@@ -177,7 +185,7 @@ cd amplify
 npx tsc --noEmit
 ```
 
-✅ **Success:** Exit code 0 confirms all imports and type definitions are valid.
+OK **Success:** Exit code 0 confirms all imports and type definitions are valid.
 
 ### File Structure
 After completing this module, your project structure should include:
@@ -210,7 +218,7 @@ npx ampx generate graphql-client-code --out amplify/auth/post-confirmation/graph
 - `amplify/auth/post-confirmation/graphql/mutations.ts`: CREATE/UPDATE/DELETE operations.
 - `amplify/auth/post-confirmation/graphql/queries.ts`: READ operations.
 
-✅ **Success:** The GraphQL client is now available for use within the `post-confirmation` Lambda function.
+OK **Success:** The GraphQL client is now available for use within the `post-confirmation` Lambda function.
 
 ---
 
@@ -233,7 +241,7 @@ export const auth = defineAuth({
 });
 ```
 
-✅ **Milestone Reached:** The authentication flow now automatically creates a profile record in the database upon successful registration.
+OK **Milestone Reached:** The authentication flow now automatically creates a profile record in the database upon successful registration.
 
 ---
 
@@ -265,7 +273,7 @@ npm run dev
 
 **Access the App:** [http://localhost:5173/](http://localhost:5173/)
 
-✅ **Project Complete:** You now have a full-stack serverless web application with authentication, database integration, and a responsive frontend!
+OK **Project Complete:** You now have a full-stack serverless web application with authentication, database integration, and a responsive frontend!
 
 ---
 
@@ -328,5 +336,5 @@ When working with heavy schema changes, we mastered the "Clean Slate" approach:
 
 ---
 
-✅ **Final Status:** The project is now a robust, secure, and production-ready serverless application.
+OK **Final Status:** The project is now a robust, secure, and production-ready serverless application.
 
