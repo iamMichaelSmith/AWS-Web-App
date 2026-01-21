@@ -17,11 +17,12 @@ const schema = a.schema({
         .model({
             email: a.string().required(),
             profileOwner: a.string(),
+            owner: a.string(),
         })
         .authorization((allow) => [
             allow.owner(),
             allow.authenticated().to(['read']),
-            allow.custom().to(['create', 'read', 'update', 'delete']),
+            allow.guest().to(['read']),
         ]),
 });
 

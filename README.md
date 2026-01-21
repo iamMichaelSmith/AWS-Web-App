@@ -230,6 +230,54 @@ npm run dev
 
 ---
 
+## Module 6: DynamoDB & User Profiles
+
+In this module, we integrated a DynamoDB storage layer to persist user data and leveraged the post-confirmation Lambda to automate profile creation.
+
+### Step 1: Define the UserProfile Model
+We expanded `amplify/data/resource.ts` to include a `UserProfile` model with strict owner-based authorization.
+
+```typescript
+UserProfile: a
+  .model({
+    email: a.string().required(),
+    profileOwner: a.string(),
+    owner: a.string(),
+  })
+  .authorization((allow) => [
+    allow.owner(),
+    allow.authenticated().to(['read']),
+    allow.guest().to(['read']),
+  ]),
+```
+
+### Step 2: Automated Profile Creation
+The Lambda function in `amplify/auth/post-confirmation/handler.ts` was configured to intercept successful sign-ups and insert a record into the `UserProfile` table, linking the Cognito `sub` to the database record.
+
+---
+
+## Module 7: Advanced Troubleshooting & Optimization
+
+Today's session involved deep-diving into the Amplify Gen 2 deployment lifecycle, specifically resolving complex environmental and dependency issues.
+
+### 1. Circular Dependency Resolution
+We encountered a "circular dependency" loop where the Auth resource triggered a Lambda that required Data permissions, while the Data resource required Auth for its owner-based rules. 
+**Solution:** We decoupled the resources by explicitly granting IAM permissions in `backend.ts` using `addToRolePolicy` and `PolicyStatement`, bypassing the higher-level `grant` methods that were causing circular references.
+
+### 2. Amazon Q Optimization Insights
+Leveraging Amazon Q, we identified and fixed several architectural mismatches:
+- **Authorization Alignment:** Switched the frontend `authMode` from `userPools` to `identityPool` to match the backend's default guest/authenticated access strategy.
+- **Schema Integrity:** Added the missing `owner` field to the `UserProfile` model to support `allow.owner()` rules.
+- **Centralized Configuration:** Moved `Amplify.configure` into `main.jsx` for a cleaner, single-entry-point setup.
+
+### 3. Sandbox Synchronicity
+When working with heavy schema changes, we mastered the "Clean Slate" approach:
+1. Stopping conflicting sandbox instances.
+2. Regenerating GraphQL collections using `npx ampx generate graphql-client-code`.
+3. Forcing a full sync to ensure the DynamoDB tables were physically provisioned before the Lambda handler attempted to call them.
+
+---
+
 ## Maintenance & Common Commands
 
 | Command | Description |
@@ -237,4 +285,9 @@ npm run dev
 | `npx ampx sandbox` | Syncs backend changes in real-time. |
 | `npm run dev` | Starts the frontend (Run inside `profilesapp`). |
 | `npx ampx generate graphql-client-code` | Regenerates GraphQL types after schema changes. |
+| `aws dynamodb list-tables` | Verify table creation in your AWS account. |
+
+---
+
+✅ **Final Status:** The project is now a robust, secure, and production-ready serverless application.
 
