@@ -1,59 +1,51 @@
-# Studio Client Survey App
+# Studio Client Survey App (Version 2.1)
 
-This is a Studio Client Survey web app built on AWS Amplify Gen 2. Artists scan a QR code, submit a 7 question survey, and submissions are stored in DynamoDB via AppSync. Administrative access is restricted to staff users through Cognito groups.
+This is a professional **Studio Client Survey** web application built on AWS Amplify Gen 2. It allows recording studios to collect valuable client feedback through a premium, dark-themed interface.
+
+## Key Features
+
+- **Public Survey Access**: Clients can submit feedback via `/survey` without logging in (powered by AWS Identity Pool guest access).
+- **Multi-Select Feedback**: Dynamic forms allowing users to pick multiple options (up to 2) for session value and support needs.
+- **Staff Admin Dashboard**: A secure, internal-only view at `/admin` for reviewing all submissions in real-time.
+- **Premium Branding**: Custom "Blak Marigold" studio aesthetic with high-contrast, large readable typography.
+- **Mobile-First Design**: Fully responsive layout centered for a clean desktop and mobile experience.
 
 ## AWS Services used
 
-- **AWS Amplify Gen 2** (backend and hosting)
-- **Amazon Cognito** (User Pool for sign in, Identity Pool for guest access)
-- **AWS AppSync** (GraphQL API layer)
-- **Amazon DynamoDB** (stores `SurveySubmission` and `UserProfile` records)
-- **AWS Lambda** (post confirmation trigger)
+- **AWS Amplify Gen 2** (Unified backend & frontend management)
+- **Amazon Cognito** (User Pool for Staff login, Identity Pool for guest submissions)
+- **AWS AppSync** (GraphQL API for real-time data sync)
+- **Amazon DynamoDB** (Scalable storage for `SurveySubmission` and `UserProfile`)
+- **AWS Lambda** (Automated post-confirmation logic)
 
 ## Architecture flow
 
 ```mermaid
 graph TD
-    A[Public User] -->|Opens /survey| B(App Frontend)
-    B -->|Calls AppSync Mutation| C[AWS AppSync]
-    C -->|Writes Data| D[(Amazon DynamoDB)]
-    E[Staff User] -->|Signs In| F(Admin Dashboard)
-    F -->|Reads Submissions| C
-    G[Cognito Group: Staff] -->|Controls Access| C
+    A[Public Client] -->|Survey Submission| B(React Frontend)
+    B -->|Guest Mutation| C[AWS AppSync]
+    C -->|Writes Record| D[(Amazon DynamoDB)]
+    E[Staff Member] -->|Cognito Login| F[Admin Dashboard]
+    F -->|GraphQL Query| C
+    G[Cognito Group: Staff] -->|IAM Permission| C
 ```
 
-1. Public user opens `/survey`
-2. App calls AppSync mutation
-3. AppSync writes to DynamoDB
-4. Staff signs in and views submissions (admin dashboard)
-5. Cognito group Staff controls read access
-
-## Authorization model
+## Authorization & Security
 
 - **SurveySubmission**: 
-    - Guests and signed in users can `create`.
-    - Only users in the **Staff** group can `read`, `update`, and `delete`.
-- **UserProfile**: 
-    - Owner-only access (users can only see their own profile).
+    - **Guests**: Can `create` only.
+    - **Staff Group**: Full `read`, `update`, and `delete` access.
+- **UserProfile**: Tight owner-only access (users manage their own profile info).
 
-## Local dev and deploy commands
+## Local Development
 
-- **Install Dependencies**: `npm install` (Project root and `profilesapp` directory)
-- **Start Backend Sandbox**: `npx ampx sandbox`
-- **Run Frontend**: `cd profilesapp && npm run dev`
-
-## Testing and verification checklist
-
-- [ ] Guest can submit survey
-- [ ] Non-staff cannot read submissions
-- [ ] Staff can read submissions
-- [ ] DynamoDB records created
-- [ ] Post confirmation Lambda still runs
-- [ ] Sandbox deploy succeeds
+1. **Install Dependencies**: `npm install` in both root and `profilesapp/`.
+2. **Launch Backend**: `npx ampx sandbox`
+3. **Launch Frontend**: `cd profilesapp && npm run dev`
 
 ---
 
-# Serverless Web Application with AWS (Original Modules)
+# Detailed Implementation History
 
 
 ## Module 1: Static Web Hosting & Environment Setup

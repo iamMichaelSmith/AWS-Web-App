@@ -1,70 +1,41 @@
-import { useState, useEffect } from "react";
-import {
-  Button,
-  Heading,
-  Flex,
-  View,
-  Grid,
-  Divider,
-} from "@aws-amplify/ui-react";
-import { useAuthenticator } from "@aws-amplify/ui-react";
+import { Routes, Route, Link } from "react-router-dom";
+import { Flex, Heading, Button, Text } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
-import { generateClient } from "aws-amplify/data";
 
-const client = generateClient({
-  authMode: "identityPool",
-});
+import SurveyPage from "./pages/SurveyPage.jsx";
+import ThanksPage from "./pages/ThanksPage.jsx";
+import AdminRoute from "./pages/AdminRoute.jsx";
 
 export default function App() {
-  const [userprofiles, setUserProfiles] = useState([]);
-  const { signOut } = useAuthenticator((context) => [context.user]);
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, []);
-
-  async function fetchUserProfile() {
-    const { data: profiles } = await client.models.UserProfile.list();
-    setUserProfiles(profiles);
-  }
-
   return (
     <Flex
-      className="App"
-      justifyContent="center"
-      alignItems="center"
       direction="column"
-      width="70%"
-      margin="0 auto"
+      alignItems="center"
+      justifyContent="center"
+      padding="2rem"
+      gap="1rem"
+      className="bm-page"
     >
-      <Heading level={1}>My Profile</Heading>
-      <Divider />
-      <Grid
-        margin="3rem 0"
-        autoFlow="column"
-        justifyContent="center"
-        gap="2rem"
-        alignContent="center"
-      >
-        {userprofiles.map((userprofile) => (
-          <Flex
-            key={userprofile.id || userprofile.email}
-            direction="column"
-            justifyContent="center"
-            alignItems="center"
-            gap="2rem"
-            border="1px solid #ccc"
-            padding="2rem"
-            borderRadius="5%"
-            className="box"
-          >
-            <View>
-              <Heading level="3">{userprofile.email}</Heading>
-            </View>
-          </Flex>
-        ))}
-      </Grid>
-      <Button onClick={signOut}>Sign Out</Button>
+      <Heading level={1}>Blak Marigold Studio Survey</Heading>
+      <Text className="bm-muted">
+        Public survey for clients. Staff dashboard for internal review.
+      </Text>
+
+      <Flex gap="1rem">
+        <Link to="/survey">
+          <Button variation="primary">Open Survey</Button>
+        </Link>
+        <Link to="/admin">
+          <Button variation="secondary">Staff Admin</Button>
+        </Link>
+      </Flex>
+
+      <Routes>
+        <Route path="/survey" element={<SurveyPage />} />
+        <Route path="/thanks" element={<ThanksPage />} />
+        <Route path="/admin" element={<AdminRoute />} />
+        <Route path="*" element={<SurveyPage />} />
+      </Routes>
     </Flex>
   );
 }

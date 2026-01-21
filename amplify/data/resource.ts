@@ -11,7 +11,7 @@ const schema = a.schema({
         .model({
             source: a.string(),
             rating: a.integer().required(),
-            mostValuablePart: a.string().required(),
+            mostValuablePart: a.string().array().required(),
             syncInterest: a.string().required(),
             freeHourNext7Days: a.string().required(),
             supportNeeded: a.string().array().required(),
