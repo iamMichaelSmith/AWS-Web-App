@@ -1,12 +1,59 @@
-# Serverless Web Application with AWS
+# Studio Client Survey App
 
-This project demonstrates how to build a serverless web application using AWS services. It follows the AWS Hands-on tutorial: [Build a Web App with S3, Lambda, API Gateway, DynamoDB](https://docs.aws.amazon.com/hands-on/latest/build-web-app-s3-lambda-api-gateway-dynamodb/module-one.html).
+This is a Studio Client Survey web app built on AWS Amplify Gen 2. Artists scan a QR code, submit a 7 question survey, and submissions are stored in DynamoDB via AppSync. Administrative access is restricted to staff users through Cognito groups.
 
-## Application Architecture
+## AWS Services used
 
-The application uses the following AWS services and flow:
+- **AWS Amplify Gen 2** (backend and hosting)
+- **Amazon Cognito** (User Pool for sign in, Identity Pool for guest access)
+- **AWS AppSync** (GraphQL API layer)
+- **Amazon DynamoDB** (stores `SurveySubmission` and `UserProfile` records)
+- **AWS Lambda** (post confirmation trigger)
 
-<img width="2158" height="922" alt="AWS Web App Project Image" src="https://github.com/user-attachments/assets/ab3a5c6a-fcad-427f-a8f8-9c320951518f" />
+## Architecture flow
+
+```mermaid
+graph TD
+    A[Public User] -->|Opens /survey| B(App Frontend)
+    B -->|Calls AppSync Mutation| C[AWS AppSync]
+    C -->|Writes Data| D[(Amazon DynamoDB)]
+    E[Staff User] -->|Signs In| F(Admin Dashboard)
+    F -->|Reads Submissions| C
+    G[Cognito Group: Staff] -->|Controls Access| C
+```
+
+1. Public user opens `/survey`
+2. App calls AppSync mutation
+3. AppSync writes to DynamoDB
+4. Staff signs in and views submissions (admin dashboard)
+5. Cognito group Staff controls read access
+
+## Authorization model
+
+- **SurveySubmission**: 
+    - Guests and signed in users can `create`.
+    - Only users in the **Staff** group can `read`, `update`, and `delete`.
+- **UserProfile**: 
+    - Owner-only access (users can only see their own profile).
+
+## Local dev and deploy commands
+
+- **Install Dependencies**: `npm install` (Project root and `profilesapp` directory)
+- **Start Backend Sandbox**: `npx ampx sandbox`
+- **Run Frontend**: `cd profilesapp && npm run dev`
+
+## Testing and verification checklist
+
+- [ ] Guest can submit survey
+- [ ] Non-staff cannot read submissions
+- [ ] Staff can read submissions
+- [ ] DynamoDB records created
+- [ ] Post confirmation Lambda still runs
+- [ ] Sandbox deploy succeeds
+
+---
+
+# Serverless Web Application with AWS (Original Modules)
 
 
 ## Module 1: Static Web Hosting & Environment Setup

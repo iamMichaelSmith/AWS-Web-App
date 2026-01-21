@@ -11,6 +11,7 @@ export const auth = defineAuth({
       mutable: true,
     },
   },
+  groups: ["Staff"],
   triggers: {
     postConfirmation
   }
