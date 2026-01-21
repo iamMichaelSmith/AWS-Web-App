@@ -1,7 +1,7 @@
 import { Flex, Heading, Text, Button, Card } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
 
-const GOOGLE_REVIEW_URL = "PASTE_YOUR_GOOGLE_REVIEW_LINK_HERE";
+const GOOGLE_REVIEW_URL = "https://g.page/r/CY1v9YmZeOdFEAI/review";
 
 export default function ThanksPage() {
     return (
