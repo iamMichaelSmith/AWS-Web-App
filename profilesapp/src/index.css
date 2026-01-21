@@ -15,47 +15,46 @@
 
   color: var(--bm-text);
   background-color: var(--bm-bg);
-
-  /* Larger base font for readability */
   font-size: 19px;
-
-  /* Rendering */
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color-scheme: dark;
+  /* Force browser to use dark system colors */
 }
 
-/* ===== Global Reset & Centering ===== */
-* {
-  box-sizing: border-box;
-}
-
+/* Force dark theme everywhere */
+html,
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
-  background: var(--bm-bg);
-  color: var(--bm-text);
+  background-color: var(--bm-bg) !important;
+  color: var(--bm-text) !important;
+}
+
+body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* Center horizontally */
   justify-content: flex-start;
-  /* Flow from top */
 }
 
 #root {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  padding-bottom: 4rem;
 }
 
-/* ===== Amplify UI Overrides (Absolute Visibility) ===== */
-.amplify-label,
-.amplify-text,
+* {
+  box-sizing: border-box;
+}
+
+/* ===== Amplify UI Overrides (High Specificity) ===== */
+[data-amplify-container],
+.amplify-flex,
+.bm-page {
+  background-color: transparent !important;
+}
+
 .amplify-heading,
+.amplify-text,
+.amplify-label,
 .amplify-radio__label,
 .amplify-checkbox__label,
 .amplify-fieldset__legend,
@@ -65,72 +64,74 @@ body {
   opacity: 1 !important;
 }
 
-.amplify-card {
+.amplify-card,
+.bm-card {
   background-color: var(--bm-surface) !important;
-}
-
-.amplify-field-group__control input,
-.amplify-field-group__control textarea {
-  background: rgba(255, 255, 255, 0.1) !important;
-  color: #ffffff !important;
   border: 1px solid var(--bm-border) !important;
-  font-size: 1rem;
 }
 
-.amplify-field-group__control input:focus,
-.amplify-field-group__control textarea:focus {
+/* AGGRESSIVE INPUT TEXT FIX */
+input,
+textarea,
+.amplify-input,
+.amplify-textarea,
+.amplify-field-group__control {
+  background-color: rgba(255, 255, 255, 0.1) !important;
   color: #ffffff !important;
-  outline: none;
-  border-color: var(--bm-marigold) !important;
+  /* FORCED WHITE TEXT */
+  border: 1px solid var(--bm-border) !important;
+  font-size: 1.1rem !important;
 }
 
+input:focus,
+textarea:focus,
+.amplify-input:focus,
+.amplify-textarea:focus {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-color: var(--bm-marigold) !important;
+  outline: none !important;
+}
+
+/* Placeholders */
+::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Buttons */
 .amplify-button[data-variation="primary"] {
   background-color: var(--bm-marigold) !important;
   color: #000000 !important;
-  font-weight: 700;
-  transition: transform 0.1s ease;
-}
-
-.amplify-button[data-variation="primary"]:active {
-  transform: scale(0.98);
+  font-weight: 800 !important;
+  border: none !important;
 }
 
 .amplify-button[data-variation="secondary"] {
-  border-color: var(--bm-marigold) !important;
+  border: 2px solid var(--bm-marigold) !important;
   color: var(--bm-marigold) !important;
+  background-color: transparent !important;
 }
 
-/* ===== Shared Layout Helpers ===== */
+/* Layout Helpers */
 .bm-page {
   width: min(1000px, 95vw);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 2rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
 }
 
 .bm-card {
-  width: min(850px, 100%);
-  background: var(--bm-surface);
-  border: 1px solid var(--bm-border);
   border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
   margin-top: 1.5rem;
+  padding: 2.5rem !important;
 }
 
 .bm-muted {
   color: var(--bm-muted) !important;
-  font-size: 1rem;
 }
 
-.bm-error {
-  color: #ff5e5e !important;
-  font-weight: 600;
-}
-
-
-/* Question title styling when we pass JSX labels */
 .bm-question {
   font-weight: 800;
-  font-size: 1.05rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
