@@ -5,6 +5,7 @@ import "@aws-amplify/ui-react/styles.css";
 import SurveyPage from "./pages/SurveyPage.jsx";
 import ThanksPage from "./pages/ThanksPage.jsx";
 import AdminRoute from "./pages/AdminRoute.jsx";
+import logo from "./assets/logo.png";
 
 export default function App() {
   return (
@@ -16,6 +17,7 @@ export default function App() {
       gap="1rem"
       className="bm-page"
     >
+      <img className="bm-logo" src={logo} alt="Blak Marigold logo" />
       <Heading level={1}>Blak Marigold Studio Survey</Heading>
       <Text className="bm-muted">
         Public survey for clients. Staff dashboard for internal review.
