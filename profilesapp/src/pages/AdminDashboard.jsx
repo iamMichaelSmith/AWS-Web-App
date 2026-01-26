@@ -16,12 +16,16 @@ import "@aws-amplify/ui-react/styles.css";
 import { generateClient } from "aws-amplify/data";
 
 const staffClient = generateClient({ authMode: "userPool" });
+const PAGE_SIZE = 50;
 
 export default function AdminDashboard() {
     const { signOut, user } = useAuthenticator((context) => [context.user]);
     const [rows, setRows] = useState([]);
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const [nextToken, setNextToken] = useState(null);
+    const [hasMore, setHasMore] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -33,8 +37,13 @@ export default function AdminDashboard() {
         setErrorMsg("");
         setIsLoading(true);
         try {
-            const { data } = await staffClient.models.SurveySubmission.list();
+            const { data, nextToken: newToken } =
+                await staffClient.models.SurveySubmission.list({
+                    limit: PAGE_SIZE,
+                });
             setRows(data || []);
+            setNextToken(newToken || null);
+            setHasMore(Boolean(newToken));
         } catch (err) {
             console.error("Admin load error:", err);
             setRows([]);
@@ -42,8 +51,30 @@ export default function AdminDashboard() {
                 err?.message ||
                 "Unable to load submissions. Are you in the Staff group?"
             );
+            setNextToken(null);
+            setHasMore(false);
         } finally {
             setIsLoading(false);
+        }
+    }
+
+    async function loadMore() {
+        if (!nextToken || isLoadingMore) return;
+        setIsLoadingMore(true);
+        try {
+            const { data, nextToken: newToken } =
+                await staffClient.models.SurveySubmission.list({
+                    limit: PAGE_SIZE,
+                    nextToken,
+                });
+            setRows((prev) => [...prev, ...(data || [])]);
+            setNextToken(newToken || null);
+            setHasMore(Boolean(newToken));
+        } catch (err) {
+            console.error("Admin load more error:", err);
+            setErrorMsg(err?.message || "Unable to load more submissions.");
+        } finally {
+            setIsLoadingMore(false);
         }
     }
 
@@ -80,50 +111,64 @@ export default function AdminDashboard() {
                     <Loader size="large" />
                 </Flex>
             ) : (
-                <Table highlightOnHover={true}>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell as="th">Created</TableCell>
-                            <TableCell as="th">Rating</TableCell>
-                            <TableCell as="th">Valuable</TableCell>
-                            <TableCell as="th">Support</TableCell>
-                            <TableCell as="th">Sync</TableCell>
-                            <TableCell as="th">Free Hr</TableCell>
-                            <TableCell as="th">Email</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {rows.filter(Boolean).length === 0 ? (
+                <>
+                    <Table highlightOnHover={true}>
+                        <TableHead>
                             <TableRow>
-                                <TableCell colSpan={7} textAlign="center" padding="2rem">
-                                    <Text className="bm-muted">No submissions yet</Text>
-                                </TableCell>
+                                <TableCell as="th">Created</TableCell>
+                                <TableCell as="th">Rating</TableCell>
+                                <TableCell as="th">Valuable</TableCell>
+                                <TableCell as="th">Support</TableCell>
+                                <TableCell as="th">Sync</TableCell>
+                                <TableCell as="th">Free Hr</TableCell>
+                                <TableCell as="th">Email</TableCell>
                             </TableRow>
-                        ) : (
-                            rows.filter(Boolean).map((r, index) => (
-                                <TableRow key={r.id ?? `row-${index}`}>
-                                    <TableCell fontSize="0.8rem">
-                                        {r?.createdAt ? new Date(r.createdAt).toLocaleDateString() : ""}
+                        </TableHead>
+                        <TableBody>
+                            {rows.filter(Boolean).length === 0 ? (
+                                <TableRow>
+                                    <TableCell colSpan={7} textAlign="center" padding="2rem">
+                                        <Text className="bm-muted">No submissions yet</Text>
                                     </TableCell>
-                                    <TableCell>{r?.rating || ""}</TableCell>
-                                    <TableCell fontSize="0.8rem">
-                                        {Array.isArray(r?.mostValuablePart)
-                                            ? r.mostValuablePart.join(", ")
-                                            : r?.mostValuablePart || ""}
-                                    </TableCell>
-                                    <TableCell fontSize="0.8rem">
-                                        {Array.isArray(r?.supportNeeded)
-                                            ? r.supportNeeded.join(", ")
-                                            : r?.supportNeeded || ""}
-                                    </TableCell>
-                                    <TableCell>{r?.syncInterest || ""}</TableCell>
-                                    <TableCell>{r?.freeHourNext7Days || ""}</TableCell>
-                                    <TableCell fontSize="0.8rem">{r?.email || ""}</TableCell>
                                 </TableRow>
-                            ))
-                        )}
-                    </TableBody>
-                </Table>
+                            ) : (
+                                rows.filter(Boolean).map((r, index) => (
+                                    <TableRow key={r.id ?? `row-${index}`}>
+                                        <TableCell fontSize="0.8rem">
+                                            {r?.createdAt ? new Date(r.createdAt).toLocaleDateString() : ""}
+                                        </TableCell>
+                                        <TableCell>{r?.rating || ""}</TableCell>
+                                        <TableCell fontSize="0.8rem">
+                                            {Array.isArray(r?.mostValuablePart)
+                                                ? r.mostValuablePart.join(", ")
+                                                : r?.mostValuablePart || ""}
+                                        </TableCell>
+                                        <TableCell fontSize="0.8rem">
+                                            {Array.isArray(r?.supportNeeded)
+                                                ? r.supportNeeded.join(", ")
+                                                : r?.supportNeeded || ""}
+                                        </TableCell>
+                                        <TableCell>{r?.syncInterest || ""}</TableCell>
+                                        <TableCell>{r?.freeHourNext7Days || ""}</TableCell>
+                                        <TableCell fontSize="0.8rem">{r?.email || ""}</TableCell>
+                                    </TableRow>
+                                ))
+                            )}
+                        </TableBody>
+                    </Table>
+
+                    {hasMore && (
+                        <Flex justifyContent="center" paddingTop="0.5rem">
+                            <Button
+                                variation="secondary"
+                                onClick={loadMore}
+                                isLoading={isLoadingMore}
+                            >
+                                Load more
+                            </Button>
+                        </Flex>
+                    )}
+                </>
             )}
         </Flex>
     );

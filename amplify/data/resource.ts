@@ -10,7 +10,13 @@ const schema = a.schema({
     SurveySubmission: a
         .model({
             source: a.string(),
-            rating: a.integer().required(),
+            rating: a
+                .integer()
+                .required()
+                .validate((v) => {
+                    v.gte(1, 'Rating must be at least 1');
+                    v.lte(5, 'Rating must be at most 5');
+                }),
             mostValuablePart: a.string().array().required(),
             syncInterest: a.string().required(),
             freeHourNext7Days: a.string().required(),

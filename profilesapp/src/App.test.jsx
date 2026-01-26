@@ -1,8 +1,13 @@
-import { render, screen } from '@testing-library/react'
-import App from './App'
+import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import App from "./App";
 
-test('renders headline', () => {
-    render(<App />)
-    const headline = screen.getByText(/Vite \+ React/i)
-    expect(headline).toBeInTheDocument()
-})
+test("renders headline", () => {
+    render(
+        <MemoryRouter>
+            <App />
+        </MemoryRouter>
+    );
+    const headline = screen.getByText(/Blak Marigold Studio Survey/i);
+    expect(headline).toBeInTheDocument();
+});
