@@ -1,4 +1,10 @@
 version: 1
+backend:
+  phases:
+    build:
+      commands:
+        - npm ci
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID
 frontend:
   phases:
     preBuild:
@@ -15,3 +21,4 @@ frontend:
   cache:
     paths:
       - profilesapp/node_modules/**/*
+      - node_modules/**/*
