@@ -10,6 +10,12 @@ This is a professional **Studio Client Survey** web application built on AWS Amp
 - Staff access is enforced via Cognito group `Staff` (read/update/delete).
 - Data can be verified from the terminal with `aws dynamodb scan --table-name <SurveySubmission-table>`.
 
+## Recent Updates (January 26, 2026)
+
+- Added admin pagination with "Load more" in the staff dashboard.
+- Enforced backend validation for `SurveySubmission.rating` (1-5).
+- Switched frontend tooling back to standard Vite for dev/build stability.
+
 ## Key Features
 
 - **Public Survey Access**: Clients can submit feedback via `/survey` without logging in (powered by AWS Identity Pool guest access).
