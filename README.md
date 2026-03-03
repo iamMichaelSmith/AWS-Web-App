@@ -344,3 +344,8 @@ When working with heavy schema changes, we mastered the "Clean Slate" approach:
 
 OK **Final Status:** The project is now a robust, secure, and production-ready serverless application.
 
+
+
+## Team Handoff
+- Use `docs/DEPLOY_RUNBOOK.md` for releases.
+- Use `docs/HANDOFF_CHECKLIST.md` for onboarding/offboarding.
